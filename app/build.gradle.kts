@@ -77,6 +77,8 @@ dependencies {
 
     //ULID
     implementation(libs.ulid.creator)
+
+    testImplementation(libs.androidx.room.testing)
 }
 
 ksp {

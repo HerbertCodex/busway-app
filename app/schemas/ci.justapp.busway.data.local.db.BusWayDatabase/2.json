@@ -2,90 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "733f4cae350285887a011f6b949a5996",
+    "identityHash": "efeaf03868946aee8ae2e67e971ee1dc",
     "entities": [
       {
-        "tableName": "sotra_bus_stops",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `category_id` TEXT NOT NULL, `location` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, `type` TEXT NOT NULL, `coordinates` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`category_id`) REFERENCES `categories`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "categoryId",
-            "columnName": "category_id",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "location",
-            "columnName": "location",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "createdAt",
-            "columnName": "created_at",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "updatedAt",
-            "columnName": "updated_at",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "geometry.type",
-            "columnName": "type",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "geometry.coordinates",
-            "columnName": "coordinates",
-            "affinity": "TEXT",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": false,
-          "columnNames": [
-            "id"
-          ]
-        },
-        "indices": [
-          {
-            "name": "index_sotra_bus_stops_category_id_location",
-            "unique": false,
-            "columnNames": [
-              "category_id",
-              "location"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_sotra_bus_stops_category_id_location` ON `${TABLE_NAME}` (`category_id`, `location`)"
-          }
-        ],
-        "foreignKeys": [
-          {
-            "table": "categories",
-            "onDelete": "RESTRICT",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "category_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
-      },
-      {
-        "tableName": "categories",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "tableName": "cities",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `slug` TEXT NOT NULL, `country_id` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`country_id`) REFERENCES `countries`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
         "fields": [
           {
             "fieldPath": "id",
@@ -100,6 +21,18 @@
             "notNull": true
           },
           {
+            "fieldPath": "slug",
+            "columnName": "slug",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "countryId",
+            "columnName": "country_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
             "fieldPath": "createdAt",
             "columnName": "created_at",
             "affinity": "INTEGER",
@@ -120,22 +53,667 @@
         },
         "indices": [
           {
-            "name": "index_categories_name",
+            "name": "index_cities_country_id",
+            "unique": false,
+            "columnNames": [
+              "country_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_cities_country_id` ON `${TABLE_NAME}` (`country_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "countries",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "country_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "communes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `slug` TEXT NOT NULL, `code` TEXT NOT NULL, `city_id` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`city_id`) REFERENCES `cities`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "slug",
+            "columnName": "slug",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cityId",
+            "columnName": "city_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updated_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_communes_city_id_name",
+            "unique": true,
+            "columnNames": [
+              "city_id",
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_communes_city_id_name` ON `${TABLE_NAME}` (`city_id`, `name`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "cities",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "city_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "countries",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `slug` TEXT NOT NULL, `code` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "slug",
+            "columnName": "slug",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updated_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_countries_name",
             "unique": true,
             "columnNames": [
               "name"
             ],
             "orders": [],
-            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_categories_name` ON `${TABLE_NAME}` (`name`)"
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_countries_name` ON `${TABLE_NAME}` (`name`)"
           }
         ],
         "foreignKeys": []
+      },
+      {
+        "tableName": "data_metadata",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `last_version` INTEGER NOT NULL, `last_updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastVersion",
+            "columnName": "last_version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastUpdatedAt",
+            "columnName": "last_updated_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "transport_companies",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `slug` TEXT NOT NULL, `code` TEXT NOT NULL, `country_id` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`country_id`) REFERENCES `countries`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "slug",
+            "columnName": "slug",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "countryId",
+            "columnName": "country_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updated_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_transport_companies_country_id_name",
+            "unique": true,
+            "columnNames": [
+              "country_id",
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_transport_companies_country_id_name` ON `${TABLE_NAME}` (`country_id`, `name`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "countries",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "country_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "transport_lines",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `slug` TEXT NOT NULL, `line` TEXT NOT NULL, `line_number` TEXT NOT NULL, `opening_hours` TEXT NOT NULL, `company_id` TEXT NOT NULL, `type_transport_id` TEXT NOT NULL, `city_id` TEXT NOT NULL, `start_commune_id` TEXT NOT NULL, `end_commune_id` TEXT NOT NULL, `geometry` TEXT NOT NULL, `data_version` INTEGER NOT NULL, `synced_at` INTEGER NOT NULL, `metadata_id` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`company_id`) REFERENCES `transport_companies`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT , FOREIGN KEY(`type_transport_id`) REFERENCES `transport_types`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT , FOREIGN KEY(`city_id`) REFERENCES `cities`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT , FOREIGN KEY(`start_commune_id`) REFERENCES `communes`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT , FOREIGN KEY(`end_commune_id`) REFERENCES `communes`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT , FOREIGN KEY(`metadata_id`) REFERENCES `data_metadata`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "slug",
+            "columnName": "slug",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "line",
+            "columnName": "line",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lineNumber",
+            "columnName": "line_number",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "openingHours",
+            "columnName": "opening_hours",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "companyId",
+            "columnName": "company_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "typeTransportId",
+            "columnName": "type_transport_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cityId",
+            "columnName": "city_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startCommuneId",
+            "columnName": "start_commune_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "endCommuneId",
+            "columnName": "end_commune_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "geometry",
+            "columnName": "geometry",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataVersion",
+            "columnName": "data_version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "syncedAt",
+            "columnName": "synced_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "metadataId",
+            "columnName": "metadata_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updated_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_transport_lines_company_id",
+            "unique": false,
+            "columnNames": [
+              "company_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_transport_lines_company_id` ON `${TABLE_NAME}` (`company_id`)"
+          },
+          {
+            "name": "index_transport_lines_type_transport_id",
+            "unique": false,
+            "columnNames": [
+              "type_transport_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_transport_lines_type_transport_id` ON `${TABLE_NAME}` (`type_transport_id`)"
+          },
+          {
+            "name": "index_transport_lines_city_id",
+            "unique": false,
+            "columnNames": [
+              "city_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_transport_lines_city_id` ON `${TABLE_NAME}` (`city_id`)"
+          },
+          {
+            "name": "index_transport_lines_start_commune_id",
+            "unique": false,
+            "columnNames": [
+              "start_commune_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_transport_lines_start_commune_id` ON `${TABLE_NAME}` (`start_commune_id`)"
+          },
+          {
+            "name": "index_transport_lines_end_commune_id",
+            "unique": false,
+            "columnNames": [
+              "end_commune_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_transport_lines_end_commune_id` ON `${TABLE_NAME}` (`end_commune_id`)"
+          },
+          {
+            "name": "index_transport_lines_metadata_id",
+            "unique": false,
+            "columnNames": [
+              "metadata_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_transport_lines_metadata_id` ON `${TABLE_NAME}` (`metadata_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "transport_companies",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "company_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "transport_types",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "type_transport_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "cities",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "city_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "communes",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "start_commune_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "communes",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "end_commune_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "data_metadata",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "metadata_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "transport_modes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `slug` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "slug",
+            "columnName": "slug",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updated_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_transport_modes_name",
+            "unique": true,
+            "columnNames": [
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_transport_modes_name` ON `${TABLE_NAME}` (`name`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "transport_types",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `slug` TEXT NOT NULL, `code` TEXT NOT NULL, `company_id` TEXT NOT NULL, `mode_id` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`mode_id`) REFERENCES `transport_modes`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT , FOREIGN KEY(`company_id`) REFERENCES `transport_companies`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "slug",
+            "columnName": "slug",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "companyId",
+            "columnName": "company_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "modeId",
+            "columnName": "mode_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updated_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_transport_types_mode_id_company_id_name",
+            "unique": true,
+            "columnNames": [
+              "mode_id",
+              "company_id",
+              "name"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_transport_types_mode_id_company_id_name` ON `${TABLE_NAME}` (`mode_id`, `company_id`, `name`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "transport_modes",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "mode_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "transport_companies",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "company_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '733f4cae350285887a011f6b949a5996')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'efeaf03868946aee8ae2e67e971ee1dc')"
     ]
   }
 }
