@@ -6,27 +6,41 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import ci.justapp.busway.data.local.dao.*
-import ci.justapp.busway.data.local.entities.*
+import ci.justapp.busway.data.local.dao.CityDao
+import ci.justapp.busway.data.local.dao.CommuneDao
+import ci.justapp.busway.data.local.dao.CountryDao
+import ci.justapp.busway.data.local.dao.DataMetadataDao
+import ci.justapp.busway.data.local.dao.TransportCompanyDao
+import ci.justapp.busway.data.local.dao.TransportLineDao
+import ci.justapp.busway.data.local.dao.TransportModeDao
+import ci.justapp.busway.data.local.dao.TransportTypeDao
+import ci.justapp.busway.data.local.entities.CityEntity
+import ci.justapp.busway.data.local.entities.CommuneEntity
+import ci.justapp.busway.data.local.entities.CountryEntity
+import ci.justapp.busway.data.local.entities.DataMetadataEntity
+import ci.justapp.busway.data.local.entities.TransportCompanyEntity
+import ci.justapp.busway.data.local.entities.TransportLineEntity
+import ci.justapp.busway.data.local.entities.TransportModeEntity
+import ci.justapp.busway.data.local.entities.TransportTypeEntity
 import ci.justapp.busway.data.local.migrations.AutoMigrationFrom1To2
 
+
 /**
- * [BusWayDatabase] is the Room database for the BusWay application.
+ * [BusWayDatabase] is the Room database class for the BusWay application.
  *
- * Entities:
- * - Core transport data (cities, communes, countries, companies, modes, etc.)
- * - Transport structures (lines, types)
- * - System metadata
+ * It defines the database schema, including the entities and their relationships,
+ * and provides access to the Data Access Objects (DAOs) for each entity.
  *
- * Version:
- * - 2: The current version of the database.
+ * This database stores information related to cities, communes, countries,
+ * data metadata, transport companies, transport lines, transport modes, and transport types.
  *
- * Auto-migrations:
- * - From version 1 to 2: Automatically handles migration.
+ * @property cityDao Provides access to the [CityDao] for interacting with [CityEntity] data.
+ * @property countryDao Provides access to the [CountryDao] for interacting with [CountryEntity] data.
+ * @property communeDao Provides access to the [CommuneDao] for interacting with [CommuneEntity] data.
+ * @property dataMetadataDao Provides access to the [DataMetadataDao] for interacting with [DataMetadataEntity] data.
  */
 @Database(
     entities = [
-        // Transport structure
         CityEntity::class,
         CommuneEntity::class,
         CountryEntity::class,

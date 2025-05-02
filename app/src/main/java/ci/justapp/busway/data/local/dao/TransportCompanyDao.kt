@@ -1,6 +1,11 @@
 package ci.justapp.busway.data.local.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
 import ci.justapp.busway.data.local.entities.TransportCompanyEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -13,25 +18,22 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TransportCompanyDao {
 
-    @Query("SELECT * FROM transport_companies")
-    fun getAllFlow(): Flow<List<TransportCompanyEntity>>
+    @Query("SELECT * FROM transport_companies ORDER BY name ASC")
+    fun findMany(): Flow<List<TransportCompanyEntity>>
+
+    @Query("SELECT * FROM transport_companies WHERE slug = :slug")
+    suspend fun findBySlug(slug: String): TransportCompanyEntity?
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(company: TransportCompanyEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(companies: List<TransportCompanyEntity>)
+    suspend fun insertMany(companies: List<TransportCompanyEntity>)
 
     @Update
     suspend fun update(company: TransportCompanyEntity)
 
     @Delete
     suspend fun delete(company: TransportCompanyEntity)
-
-    @Query("SELECT * FROM transport_companies WHERE slug = :slug")
-    suspend fun getBySlug(slug: String): TransportCompanyEntity?
-
-    @Query("SELECT * FROM transport_companies")
-    suspend fun getAll(): List<TransportCompanyEntity>
 }
