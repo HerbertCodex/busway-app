@@ -62,6 +62,8 @@ dependencies {
     //Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+
 
     //Kotlin Extensions and Coroutines support for Room
     implementation(libs.androidx.room.ktx)
@@ -77,6 +79,11 @@ dependencies {
 
     //ULID
     implementation(libs.ulid.creator)
+
+    //OSMDroid Maps
+    implementation(libs.osmdroid.android)
+    implementation(libs.osmdroid.wms)
+
 
     testImplementation(libs.androidx.room.testing)
 }
