@@ -1,7 +1,6 @@
 package ci.justapp.busway.presentation.screens.main
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
@@ -43,61 +42,61 @@ fun MainScreen(
     val loc by viewModel.locationUiState.collectAsState()
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
-    // Utiliser un Box comme conteneur principal pour éviter les problèmes de layout
-    Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 20.dp),
-            contentPadding = PaddingValues(bottom = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            /* 1. Carte */
-            item {
-                MapContainer {
-                    LocationMap(
-                        latitude = loc.latitude,
-                        longitude = loc.longitude,
-                        modifier = Modifier
-                            .height(screenHeight * .30f)
-                            .fillMaxWidth()
-                    )
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp),
+        contentPadding = PaddingValues(bottom = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(20.dp)
+    ) {
+        /* 1. Carte */
+        item {
+            MapContainer {
+                LocationMap(
+                    latitude = loc.latitude,
+                    longitude = loc.longitude,
+                    modifier = Modifier
+                        .height(screenHeight * .30f)
+                        .fillMaxWidth()
+                )
+            }
+        }
+
+        /* 2. SearchBar */
+        item {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text("Search for a destination", style = MaterialTheme.typography.titleMedium)
+                // Toujours naviguer vers l'écran de recherche avec un préfixe vide
+                SearchBar(
+                    placeholder = "Select location",
+                    onClick = { onSearchRequested("") },  // Toujours appeler avec une chaîne vide
+                    readOnly = true  // Garder en lecture seule pour forcer la navigation
+                )
+            }
+        }
+
+        /* 3. Saved chips */
+        item {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text("Saved location", style = MaterialTheme.typography.titleMedium)
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    // Naviguer vers l'écran de recherche avec les valeurs préremplies
+                    SavedChip(Icons.Filled.Home, "Our Home") { onSearchRequested("Our Home") }
+                    SavedChip(
+                        Icons.Filled.AccountBox,
+                        "My Office"
+                    ) { onSearchRequested("My Office") }
+                    SavedChip(Icons.Filled.Place, "Danilla") { onSearchRequested("Danilla") }
                 }
             }
+        }
 
-            /* 2. SearchBar */
-            item {
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Search for a destination", style = MaterialTheme.typography.titleMedium)
-                    SearchBar(
-                        placeholder = "Select location",
-                        onClick = { onSearchRequested("") },
-                        readOnly = true
-                    )
-                }
-            }
-
-            /* 3. Saved chips */
-            item {
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Saved location", style = MaterialTheme.typography.titleMedium)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        SavedChip(Icons.Filled.Home, "Our Home") { onSearchRequested("Our Home") }
-                        SavedChip(
-                            Icons.Filled.AccountBox,
-                            "My Office"
-                        ) { onSearchRequested("My Office") }
-                        SavedChip(Icons.Filled.Place, "Danilla") { onSearchRequested("Danilla") }
-                    }
-                }
-            }
-
-            /* 4. Previous searches */
-            item {
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Your previous searches", style = MaterialTheme.typography.titleMedium)
-                    PreviousSearchSection { dest -> onSearchRequested(dest) }
-                }
+        /* 4. Previous searches */
+        item {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text("Your previous searches", style = MaterialTheme.typography.titleMedium)
+                // Naviguer vers l'écran de recherche avec la destination sélectionnée
+                PreviousSearchSection { dest -> onSearchRequested(dest) }
             }
         }
     }

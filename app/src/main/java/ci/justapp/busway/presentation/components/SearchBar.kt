@@ -47,9 +47,10 @@ fun SearchBar(
                 MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
                 RoundedCornerShape(12.dp)
             )
+            // Assurer que le clic fonctionne correctement en mode lecture seule
             .then(
                 if (onClick != null && readOnly)
-                    Modifier.clickable { onClick() }
+                    Modifier.clickable(onClick = onClick)
                 else
                     Modifier
             )

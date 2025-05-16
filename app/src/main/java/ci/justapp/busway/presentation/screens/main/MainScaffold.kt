@@ -111,7 +111,7 @@ fun MainScaffold() {
                     MainScreen(
                         onSearchRequested = { prefill ->
                             rootNav.navigate("${RootGraph.SEARCH}?${NavArg.PREFILL}=$prefill") {
-                                popUpTo(rootNav.graph.findStartDestination().route ?: "") {
+                                popUpTo(rootNav.graph.findStartDestination().id) {
                                     saveState = true
                                 }
                                 launchSingleTop = true
