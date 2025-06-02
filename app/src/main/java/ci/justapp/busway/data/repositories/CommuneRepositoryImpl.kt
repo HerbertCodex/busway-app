@@ -1,12 +1,15 @@
 package ci.justapp.busway.data.repositories
 
+import android.util.Log
 import androidx.annotation.WorkerThread
 import ci.justapp.busway.data.local.dao.CommuneDao
 import ci.justapp.busway.data.local.entities.CommuneEntity
+import ci.justapp.busway.data.remote.services.CommunesApiService
 import ci.justapp.busway.domain.models.CommuneModel
 import ci.justapp.busway.domain.repositories.CommuneRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.Instant
 import javax.inject.Inject
 
 /**
@@ -17,7 +20,7 @@ import javax.inject.Inject
  *
  * @property communeDao The Data Access Object (DAO) for [CommuneEntity], used for database interactions.
  */
-class CommuneRepositoryImpl @Inject constructor(private val communeDao: CommuneDao) :
+class CommuneRepositoryImpl @Inject constructor(private val communeDao: CommuneDao, private  val communeApi: CommunesApiService) :
     CommuneRepository {
 
     override fun getCommunes(): Flow<List<CommuneModel>> {
@@ -70,5 +73,32 @@ class CommuneRepositoryImpl @Inject constructor(private val communeDao: CommuneD
             createdAt = createdAt,
             updatedAt = updatedAt
         )
+    }
+
+    @WorkerThread
+    override suspend fun fetchAndStoreCommunesFromApi() {
+        try {
+            Log.d("COMMUNE_API", "Appel à l'API Encore...")
+            val response = communeApi.getCommunes()
+            Log.d("COMMUNE_API", "Réponse reçue. Total: ${response.total}, Nombre d'éléments: ${response.data.size}")
+
+            val communes = response.data.map { dto ->
+                CommuneModel(
+                    id = dto.id,
+                    name = dto.name,
+                    slug = dto.slug,
+                    code = dto.code,
+                    cityId = dto.city_id,
+                    createdAt = Instant.parse(dto.created_at).toEpochMilli(),
+                    updatedAt = Instant.parse(dto.updated_at).toEpochMilli()
+                )
+            }
+
+            Log.d("COMMUNE_REPO", "Insertion de ${communes.size} communes")
+            insertMany(communes)
+            Log.d("COMMUNE_REPO", "Insertion réussie.")
+        } catch (e: Exception) {
+            Log.e("COMMUNE_API", "Erreur lors de la synchronisation : ${e.message}", e)
+        }
     }
 }

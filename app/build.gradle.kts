@@ -86,6 +86,30 @@ dependencies {
 
 
     testImplementation(libs.androidx.room.testing)
+
+    // JUnit 4
+    testImplementation("junit:junit:4.13.2")
+
+    // AndroidX Test - Core (pour Robolectric)
+    testImplementation ("androidx.test:core:1.5.0")
+
+    // Bibliothèque de test pour Compose
+    testImplementation("androidx.compose.ui:ui-test-junit4:1.5.4")
+    testImplementation("androidx.compose.ui:ui-test-manifest:1.5.4")
+
+    // Mockito pour Kotlin
+    testImplementation("org.mockito:mockito-core:5.3.1")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.0.0")
+
+    // Retrofit (client HTTP)
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+
+    // Gson Converter (convertir JSON vers objets Kotlin)
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Coroutines (si tu utilises viewModelScope + suspend)
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 }
 
 ksp {

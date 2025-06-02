@@ -28,15 +28,28 @@ import ci.justapp.busway.presentation.components.MapContainer
 import ci.justapp.busway.presentation.components.PreviousSearchSection
 import ci.justapp.busway.presentation.components.SavedChip
 import ci.justapp.busway.presentation.components.SearchBar
+import ci.justapp.busway.presentation.viewmodels.CityViewModel
+import ci.justapp.busway.presentation.viewmodels.CommuneViewModel
+import ci.justapp.busway.presentation.viewmodels.CountryViewModel
+import ci.justapp.busway.presentation.viewmodels.TransportCompanyViewModel
 
 @Composable
 fun MainScreen(
     onSearchRequested: (prefill: String) -> Unit,
-    viewModel: MainViewModel = hiltViewModel()
+    viewModel: MainViewModel = hiltViewModel(),
+    cityViewModel: CityViewModel = hiltViewModel(),
+    countryViewModel: CountryViewModel = hiltViewModel(),
+    communeViewModel: CommuneViewModel = hiltViewModel(),
+    transportCompanyViewModel: TransportCompanyViewModel = hiltViewModel()
 ) {
     // Forcer l'initialisation des données au premier affichage
     LaunchedEffect(Unit) {
         viewModel.fetchCurrentLocation()
+//        countryViewModel.syncCountriesFromApi()
+//        cityViewModel.syncCitiesFromApi()
+//        communeViewModel.syncCommunesFromApi()
+        transportCompanyViewModel.syncCompaniesFromApi()
+
     }
 
     val loc by viewModel.locationUiState.collectAsState()

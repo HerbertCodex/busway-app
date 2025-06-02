@@ -1,12 +1,15 @@
 package ci.justapp.busway.data.repositories
 
+import android.util.Log
 import androidx.annotation.WorkerThread
 import ci.justapp.busway.data.local.dao.CityDao
 import ci.justapp.busway.data.local.entities.CityEntity
+import ci.justapp.busway.data.remote.services.CityApiService
 import ci.justapp.busway.domain.models.CityModel
 import ci.justapp.busway.domain.repositories.CityRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.Instant
 import javax.inject.Inject
 
 /**
@@ -17,7 +20,7 @@ import javax.inject.Inject
  *
  * @property cityDao The Data Access Object for cities, providing access to the underlying database.
  */
-class CityRepositoryImpl @Inject constructor(private val cityDao: CityDao) : CityRepository {
+class CityRepositoryImpl @Inject constructor(private val cityDao: CityDao, private val cityApi: CityApiService) : CityRepository {
 
     override fun getCities(): Flow<List<CityModel>> {
         return cityDao.findMany().map { cities -> cities.map { it.toModel() } }
@@ -67,5 +70,32 @@ class CityRepositoryImpl @Inject constructor(private val cityDao: CityDao) : Cit
             createdAt = createdAt,
             updatedAt = updatedAt
         )
+    }
+
+
+    @WorkerThread
+    override suspend fun fetchAndStoreCitiesFromApi() {
+        try {
+            Log.d("CITY_API", "Appel à l'API Encore...")
+            val response = cityApi.getCities()
+
+            Log.d("CITY_API", "Réponse reçue. Total: ${response.total}, Nombre d'éléments: ${response.data.size}")
+            val cities = response.data.map {
+                dto -> CityModel(
+                    id =  dto.id,
+                    name = dto.name,
+                    slug = dto.slug,
+                    countryId = dto.country_id,
+                    createdAt =  Instant.parse(dto.created_at).toEpochMilli(),
+                    updatedAt = Instant.parse(dto.updated_at).toEpochMilli()
+                )
+            }
+
+        Log.d("CITY_REPO", "Insertion en base de ${cities.size} villes...")
+        insertMany(cities)
+        Log.d("CITY_REPO", "Insertion terminée avec succès.")
+    } catch (e: Exception) {
+        Log.e("CITY_API", "Erreur lors de la synchronisation : ${e.message}", e)
+    }
     }
 }

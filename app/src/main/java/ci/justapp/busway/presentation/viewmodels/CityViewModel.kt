@@ -50,4 +50,17 @@ class CityViewModel @Inject constructor(private val cityRepository: CityReposito
             }
         }
     }
+
+    /** Synchronise les villes depuis l'API distante et recharge l'état */
+    fun syncCitiesFromApi() {
+        viewModelScope.launch {
+            try {
+                _uiState.value = UiState.Loading
+                cityRepository.fetchAndStoreCitiesFromApi() // récupère et insère
+                loadCities() // recharge depuis Room
+            } catch (e: Exception) {
+                _uiState.value = UiState.Error(e.message ?: "Failed to sync cities")
+            }
+        }
+    }
 }

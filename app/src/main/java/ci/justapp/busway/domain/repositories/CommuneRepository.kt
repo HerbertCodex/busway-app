@@ -15,4 +15,5 @@ interface CommuneRepository {
     suspend fun insertMany(communes: List<CommuneModel>)
     suspend fun update(commune: CommuneModel)
     suspend fun delete(commune: CommuneModel)
+    suspend fun fetchAndStoreCommunesFromApi()
 }

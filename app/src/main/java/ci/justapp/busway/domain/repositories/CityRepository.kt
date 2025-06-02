@@ -16,4 +16,5 @@ interface CityRepository {
     suspend fun insertMany(cities: List<CityModel>)
     suspend fun update(city: CityModel)
     suspend fun delete(city: CityModel)
+    suspend fun fetchAndStoreCitiesFromApi()
 }

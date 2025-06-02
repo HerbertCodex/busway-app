@@ -15,4 +15,5 @@ interface TransportCompanyRepository {
     suspend fun insert(company: TransportCompanyModel)
     suspend fun delete(company: TransportCompanyModel)
     suspend fun update(company: TransportCompanyModel)
+    suspend fun fetchAndStoreTransportCompaniesFromApi()
 }

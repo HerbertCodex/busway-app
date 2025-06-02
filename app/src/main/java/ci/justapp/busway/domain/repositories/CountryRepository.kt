@@ -15,4 +15,5 @@ interface CountryRepository {
     suspend fun insertMany(countries: List<CountryModel>)
     suspend fun update(country: CountryModel)
     suspend fun delete(country: CountryModel)
+    suspend fun  fetchAndStoreCountriesFromApi()
 }
