@@ -16,4 +16,5 @@ interface TransportModeRepository {
     suspend fun insertMany(modes: List<TransportModeModel>)
     suspend fun update(mode: TransportModeModel)
     suspend fun delete(mode: TransportModeModel)
+    suspend fun fetchAndStoreTransportModesFromApi()
 }

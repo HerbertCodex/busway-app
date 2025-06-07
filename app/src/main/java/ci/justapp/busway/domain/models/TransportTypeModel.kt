@@ -1,5 +1,7 @@
 package ci.justapp.busway.domain.models
 
+import java.time.Instant
+
 /**
  * Represents a transport type within the system.
  *
@@ -23,6 +25,20 @@ data class TransportTypeModel(
     val code: String,
     val companyId: String,
     val modeId: String,
-    val createdAt: Long,
-    val updatedAt: Long
-)
+    val createdAt: String, // Changé de Long à String
+    val updatedAt: String
+){
+    /**
+     * Converts the ISO 8601 createdAt string to milliseconds timestamp.
+     */
+    fun getCreatedAtAsLong(): Long {
+        return Instant.parse(createdAt).toEpochMilli()
+    }
+
+    /**
+     * Converts the ISO 8601 updatedAt string to milliseconds timestamp.
+     */
+    fun getUpdatedAtAsLong(): Long {
+        return Instant.parse(updatedAt).toEpochMilli()
+    }
+}

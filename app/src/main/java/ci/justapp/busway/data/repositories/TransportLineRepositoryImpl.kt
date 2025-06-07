@@ -1,8 +1,10 @@
 package ci.justapp.busway.data.repositories
 
+import android.util.Log
 import androidx.annotation.WorkerThread
 import ci.justapp.busway.data.local.dao.TransportLineDao
 import ci.justapp.busway.data.local.entities.TransportLineEntity
+import ci.justapp.busway.data.remote.services.TransportLineApiService
 import ci.justapp.busway.domain.models.TransportLineModel
 import ci.justapp.busway.domain.repositories.TransportLineRepository
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +21,7 @@ import javax.inject.Inject
  * @property transportLineDao The Data Access Object for transport lines, used to interact with the
  * database. Injected via constructor injection.
  */
-class TransportLineRepositoryImpl @Inject constructor(private val transportLineDao: TransportLineDao) :
+class TransportLineRepositoryImpl @Inject constructor(private val transportLineDao: TransportLineDao, private val apiService: TransportLineApiService) :
     TransportLineRepository {
     override fun getTransportLines(): Flow<List<TransportLineModel>> {
         return transportLineDao.findMany()
@@ -58,16 +60,16 @@ class TransportLineRepositoryImpl @Inject constructor(private val transportLineD
             lineNumber = lineNumber,
             openingHours = openingHours,
             companyId = companyId,
-            typeTransportId = typeTransportId,
+            transportTypeId = typeTransportId,
             cityId = cityId,
             startCommuneId = startCommuneId,
             endCommuneId = endCommuneId,
             geometry = geometry,
             dataVersion = dataVersion,
-            syncedAt = syncedAt,
+            syncedAt = syncedAt.toString(),
             metadataId = metadataId,
-            createdAt = createdAt,
-            updatedAt = updatedAt
+            createdAt = createdAt.toString(),
+            updatedAt = updatedAt.toString()
         )
     }
 
@@ -76,19 +78,33 @@ class TransportLineRepositoryImpl @Inject constructor(private val transportLineD
             id = id,
             slug = slug,
             line = line,
-            lineNumber = lineNumber,
+            lineNumber = lineNumber.toString(),
             openingHours = openingHours,
             companyId = companyId,
-            typeTransportId = typeTransportId,
+            typeTransportId = transportTypeId,
             cityId = cityId,
             startCommuneId = startCommuneId,
             endCommuneId = endCommuneId,
             geometry = geometry,
             dataVersion = dataVersion,
-            syncedAt = syncedAt,
+            syncedAt = getSyncedAtAtAsLong(),
             metadataId = metadataId,
-            createdAt = createdAt,
-            updatedAt = updatedAt
+            createdAt = getCreatedAtAsLong(),
+            updatedAt = getUpdatedAtAsLong()
         )
+    }
+
+    @WorkerThread
+    override suspend fun fetchAndStoreTransportLinesFromApi() {
+        try {
+            Log.d("TC_API", "Appel API des Line de transport...")
+            val response = apiService.getLines()
+
+
+            insertMany(response.data)
+            Log.d("TC_API", " succes")
+        } catch (e: Exception) {
+            Log.e("TC_API", "Erreur lors de la synchronisation", e)
+        }
     }
 }

@@ -16,4 +16,5 @@ interface TransportLineRepository {
     suspend fun insertMany(lines: List<TransportLineModel>)
     suspend fun update(line: TransportLineModel)
     suspend fun delete(line: TransportLineModel)
+    suspend fun fetchAndStoreTransportLinesFromApi()
 }

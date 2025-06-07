@@ -1,5 +1,8 @@
 package ci.justapp.busway.domain.models
 
+import kotlinx.serialization.Serializable
+import java.time.Instant
+
 /**
  * Represents a country with its essential details.
  *
@@ -13,11 +16,26 @@ package ci.justapp.busway.domain.models
  * @property createdAt The timestamp (in milliseconds) when the country record was created.
  * @property updatedAt The timestamp (in milliseconds) when the country record was last updated.
  */
+
 data class CountryModel(
     val id: String,
     val name: String,
     val slug: String,
-    val code: String,
-    val createdAt: Long,
-    val updatedAt: Long
-)
+    val codeIso: String,
+    val createdAt: String, // Changé de Long à String
+    val updatedAt: String
+){
+    /**
+     * Converts the ISO 8601 createdAt string to milliseconds timestamp.
+     */
+    fun getCreatedAtAsLong(): Long {
+        return Instant.parse(createdAt).toEpochMilli()
+    }
+
+    /**
+     * Converts the ISO 8601 updatedAt string to milliseconds timestamp.
+     */
+    fun getUpdatedAtAsLong(): Long {
+        return Instant.parse(updatedAt).toEpochMilli()
+    }
+}

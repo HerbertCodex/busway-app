@@ -58,8 +58,8 @@ class CommuneRepositoryImpl @Inject constructor(private val communeDao: CommuneD
             slug = slug,
             code = code,
             cityId = cityId,
-            createdAt = createdAt,
-            updatedAt = updatedAt
+            createdAt = createdAt.toString(),
+            updatedAt = updatedAt.toString()
         )
     }
 
@@ -70,8 +70,8 @@ class CommuneRepositoryImpl @Inject constructor(private val communeDao: CommuneD
             slug = slug,
             code = code,
             cityId = cityId,
-            createdAt = createdAt,
-            updatedAt = updatedAt
+            createdAt = getCreatedAtAsLong(),
+            updatedAt = getUpdatedAtAsLong()
         )
     }
 
@@ -82,20 +82,8 @@ class CommuneRepositoryImpl @Inject constructor(private val communeDao: CommuneD
             val response = communeApi.getCommunes()
             Log.d("COMMUNE_API", "Réponse reçue. Total: ${response.total}, Nombre d'éléments: ${response.data.size}")
 
-            val communes = response.data.map { dto ->
-                CommuneModel(
-                    id = dto.id,
-                    name = dto.name,
-                    slug = dto.slug,
-                    code = dto.code,
-                    cityId = dto.city_id,
-                    createdAt = Instant.parse(dto.created_at).toEpochMilli(),
-                    updatedAt = Instant.parse(dto.updated_at).toEpochMilli()
-                )
-            }
-
-            Log.d("COMMUNE_REPO", "Insertion de ${communes.size} communes")
-            insertMany(communes)
+            Log.d("COMMUNE_REPO", "Insertion de ${response.data.size} communes")
+            insertMany(response.data)
             Log.d("COMMUNE_REPO", "Insertion réussie.")
         } catch (e: Exception) {
             Log.e("COMMUNE_API", "Erreur lors de la synchronisation : ${e.message}", e)

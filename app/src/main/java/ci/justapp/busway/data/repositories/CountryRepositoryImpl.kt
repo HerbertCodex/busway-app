@@ -9,7 +9,6 @@ import ci.justapp.busway.domain.models.CountryModel
 import ci.justapp.busway.domain.repositories.CountryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.time.Instant
 import javax.inject.Inject
 import kotlin.collections.map
 
@@ -41,6 +40,25 @@ class CountryRepositoryImpl @Inject constructor(private val countryDao: CountryD
     }
 
     @WorkerThread
+    override suspend fun fetchAndStoreCountriesFromApi() {
+        try {
+            Log.d("CITY_API", "Appel à l'API Encore...")
+            val response = apiService.getCountries()
+
+            Log.d("CITY_API", "Réponse reçue. Total: ${response.total}, Nombre d'éléments: ${response.data.size}")
+
+
+            Log.d("CITY_REPO", "Insertion en base de ${response.data.size} pays...")
+            Log.d("data", "test: ${response.data.toString()}")
+            insertMany(response.data)
+            Log.d("CITY_REPO", "Insertion terminée avec succès.")
+        } catch (e: Exception) {
+            Log.e("CITY_API", "Erreur lors de la synchronisation : ${e.message}", e)
+        }
+    }
+
+
+    @WorkerThread
     override suspend fun insertMany(countries: List<CountryModel>) {
         return countryDao.insertMany(countries.map { it.toEntity() })
     }
@@ -60,9 +78,9 @@ class CountryRepositoryImpl @Inject constructor(private val countryDao: CountryD
             id = id,
             name = name,
             slug = slug,
-            code = code,
-            createdAt = createdAt,
-            updatedAt = updatedAt
+            codeIso = code,
+            createdAt = createdAt.toString(),
+            updatedAt = updatedAt.toString()
         )
     }
 
@@ -71,36 +89,9 @@ class CountryRepositoryImpl @Inject constructor(private val countryDao: CountryD
             id = id,
             name = name,
             slug = slug,
-            code = code,
-            createdAt = createdAt,
-            updatedAt = updatedAt
+            code = codeIso,
+            createdAt = getCreatedAtAsLong(),
+            updatedAt = getUpdatedAtAsLong()
         )
     }
-
-    @WorkerThread
-    override suspend fun fetchAndStoreCountriesFromApi() {
-        try {
-            Log.d("CITY_API", "Appel à l'API Encore...")
-            val response = apiService.getCountries()
-
-            Log.d("CITY_API", "Réponse reçue. Total: ${response.total}, Nombre d'éléments: ${response.data.size}")
-            val countries = response.data.map { dto ->
-                CountryModel(
-                    id = dto.id,
-                    name = dto.name,
-                    slug = dto.slug,
-                    code = dto.code_iso, // ← Mapping code_iso vers code
-                    createdAt =  Instant.parse(dto.created_at).toEpochMilli(),
-                    updatedAt = Instant.parse(dto.updated_at).toEpochMilli()
-                )
-            }
-
-            Log.d("CITY_REPO", "Insertion en base de ${countries.size} villes...")
-            insertMany(countries)
-            Log.d("CITY_REPO", "Insertion terminée avec succès.")
-        } catch (e: Exception) {
-            Log.e("CITY_API", "Erreur lors de la synchronisation : ${e.message}", e)
-        }
-    }
-
 }

@@ -4,6 +4,9 @@ import ci.justapp.busway.data.remote.services.CityApiService
 import ci.justapp.busway.data.remote.services.CommunesApiService
 import ci.justapp.busway.data.remote.services.CountriesApiService
 import ci.justapp.busway.data.remote.services.TransportCompanyApiService
+import ci.justapp.busway.data.remote.services.TransportLineApiService
+import ci.justapp.busway.data.remote.services.TransportModeApiService
+import ci.justapp.busway.data.remote.services.TransportTypeApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +20,7 @@ object NetworkModule {
 
     @Provides
     fun provideRetrofit(): Retrofit = Retrofit.Builder()
-        .baseUrl("http://192.168.47.250:4000/")
+        .baseUrl("http://192.168.254.250:4000/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
@@ -36,4 +39,17 @@ object NetworkModule {
     @Provides
     fun provideTransportCompanyApiService(retrofit: Retrofit): TransportCompanyApiService =
         retrofit.create(TransportCompanyApiService::class.java)
+
+    @Provides
+    fun provideTransportTypeCompanyApiService(retrofit: Retrofit): TransportTypeApiService =
+        retrofit.create(TransportTypeApiService::class.java)
+
+    @Provides
+    fun provideTransportLineApiService(retrofit: Retrofit): TransportLineApiService =
+        retrofit.create(TransportLineApiService::class.java)
+
+    @Provides
+    fun provideTransportModeApiService(retrofit: Retrofit): TransportModeApiService =
+        retrofit.create(TransportModeApiService::class.java)
+
 }

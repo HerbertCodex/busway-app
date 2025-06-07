@@ -1,8 +1,10 @@
 package ci.justapp.busway.data.repositories
 
+import android.util.Log
 import androidx.annotation.WorkerThread
 import ci.justapp.busway.data.local.dao.TransportTypeDao
 import ci.justapp.busway.data.local.entities.TransportTypeEntity
+import ci.justapp.busway.data.remote.services.TransportTypeApiService
 import ci.justapp.busway.domain.models.TransportTypeModel
 import ci.justapp.busway.domain.repositories.TransportTypeRepository
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +21,7 @@ import javax.inject.Inject
  * @property transportTypeDao The Data Access Object (DAO) for [TransportTypeEntity], used for
  * interacting with the database.
  */
-class TransportTypeRepositoryImpl @Inject constructor(private val transportTypeDao: TransportTypeDao) :
+class TransportTypeRepositoryImpl @Inject constructor(private val transportTypeDao: TransportTypeDao, private val apiService: TransportTypeApiService) :
     TransportTypeRepository {
 
     override fun getTransportTypes(): Flow<List<TransportTypeModel>> {
@@ -34,6 +36,22 @@ class TransportTypeRepositoryImpl @Inject constructor(private val transportTypeD
     @WorkerThread
     override suspend fun insert(type: TransportTypeModel) {
         return transportTypeDao.insert(type.toEntity())
+    }
+
+
+    @WorkerThread
+    override suspend fun fetchAndStoreTransportTypesFromApi() {
+        try {
+            Log.d("TC_API", "Appel API des type de transport...")
+            val response = apiService.getTransportTypes()
+
+            Log.d("TC_API", "Insertion en base de ${response.data.size} type transport...")
+
+            insertMany(response.data)
+            Log.d("TC_API", "Synchronisation des type transport réussie.")
+        } catch (e: Exception) {
+            Log.e("TC_API", "Erreur lors de la synchronisation : ${e.message}", e)
+        }
     }
 
     @WorkerThread
@@ -59,8 +77,8 @@ class TransportTypeRepositoryImpl @Inject constructor(private val transportTypeD
             code = code,
             companyId = companyId,
             modeId = modeId,
-            createdAt = createdAt,
-            updatedAt = updatedAt,
+            createdAt = createdAt.toString(),
+            updatedAt = updatedAt.toString(),
         )
     }
 
@@ -72,8 +90,8 @@ class TransportTypeRepositoryImpl @Inject constructor(private val transportTypeD
             code = code,
             companyId = companyId,
             modeId = modeId,
-            createdAt = createdAt,
-            updatedAt = updatedAt,
+            createdAt = getCreatedAtAsLong(),
+            updatedAt = getUpdatedAtAsLong(),
         )
     }
 }

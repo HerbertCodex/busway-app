@@ -1,8 +1,10 @@
 package ci.justapp.busway.data.repositories
 
+import android.util.Log
 import androidx.annotation.WorkerThread
 import ci.justapp.busway.data.local.dao.TransportModeDao
 import ci.justapp.busway.data.local.entities.TransportModeEntity
+import ci.justapp.busway.data.remote.services.TransportModeApiService
 import ci.justapp.busway.domain.models.TransportModeModel
 import ci.justapp.busway.domain.repositories.TransportModeRepository
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +21,7 @@ import javax.inject.Inject
  * @property transportModeDao The Data Access Object (DAO) used to interact with the
  *                           persistence layer for transport mode entities.
  */
-class TransportModeRepositoryImpl @Inject constructor(private val transportModeDao: TransportModeDao) :
+class TransportModeRepositoryImpl @Inject constructor(private val transportModeDao: TransportModeDao, private val apiService: TransportModeApiService) :
     TransportModeRepository {
 
     override fun getTransportModes(): Flow<List<TransportModeModel>> {
@@ -29,6 +31,21 @@ class TransportModeRepositoryImpl @Inject constructor(private val transportModeD
 
     override suspend fun getTransportModeBySlug(slug: String): TransportModeModel? {
         return transportModeDao.findBySlug(slug)?.toModel()
+    }
+
+
+    @WorkerThread
+    override suspend fun fetchAndStoreTransportModesFromApi() {
+        try {
+            Log.d("TC_API", "Appel API des compagnies de transport...")
+            val response = apiService.getTransportModes()
+
+            Log.d("TC_API", "Insertion en base de ${response.data.size} compagnies...")
+            insertMany(response.data)
+            Log.d("TC_API", "Synchronisation des compagnies réussie.")
+        } catch (e: Exception) {
+            Log.e("TC_API", "Erreur lors de la synchronisation : ${e.message}", e)
+        }
     }
 
     @WorkerThread
@@ -56,8 +73,8 @@ class TransportModeRepositoryImpl @Inject constructor(private val transportModeD
             id = id,
             name = name,
             slug = slug,
-            createdAt = createdAt,
-            updatedAt = updatedAt
+            createdAt = createdAt.toString(),
+            updatedAt = updatedAt.toString()
         )
     }
 
@@ -66,8 +83,8 @@ class TransportModeRepositoryImpl @Inject constructor(private val transportModeD
             id = id,
             name = name,
             slug = slug,
-            createdAt = createdAt,
-            updatedAt = updatedAt
+            createdAt = getCreatedAtAsLong(),
+            updatedAt = getUpdatedAtAsLong()
         )
     }
 }

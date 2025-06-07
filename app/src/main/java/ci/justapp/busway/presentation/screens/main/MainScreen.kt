@@ -32,6 +32,9 @@ import ci.justapp.busway.presentation.viewmodels.CityViewModel
 import ci.justapp.busway.presentation.viewmodels.CommuneViewModel
 import ci.justapp.busway.presentation.viewmodels.CountryViewModel
 import ci.justapp.busway.presentation.viewmodels.TransportCompanyViewModel
+import ci.justapp.busway.presentation.viewmodels.TransportLineViewModel
+import ci.justapp.busway.presentation.viewmodels.TransportModeViewModel
+import ci.justapp.busway.presentation.viewmodels.TransportTypeViewModel
 
 @Composable
 fun MainScreen(
@@ -40,16 +43,21 @@ fun MainScreen(
     cityViewModel: CityViewModel = hiltViewModel(),
     countryViewModel: CountryViewModel = hiltViewModel(),
     communeViewModel: CommuneViewModel = hiltViewModel(),
-    transportCompanyViewModel: TransportCompanyViewModel = hiltViewModel()
+    transportCompanyViewModel: TransportCompanyViewModel = hiltViewModel(),
+    transportModeViewModel: TransportModeViewModel = hiltViewModel(),
+    transportTypeViewModel: TransportTypeViewModel = hiltViewModel(),
+    transportLineViewModel: TransportLineViewModel = hiltViewModel()
 ) {
     // Forcer l'initialisation des données au premier affichage
     LaunchedEffect(Unit) {
-        viewModel.fetchCurrentLocation()
-//        countryViewModel.syncCountriesFromApi()
+//        viewModel.fetchCurrentLocation()
+        countryViewModel.syncCountriesFromApi()
 //        cityViewModel.syncCitiesFromApi()
 //        communeViewModel.syncCommunesFromApi()
-        transportCompanyViewModel.syncCompaniesFromApi()
-
+//        transportCompanyViewModel.syncCompaniesFromApi()
+//        transportModeViewModel.syncTransportModesFromApi()
+//        transportTypeViewModel.syncTransportTypesFromApi()
+//        transportLineViewModel.syncTransportLinesFromApi()
     }
 
     val loc by viewModel.locationUiState.collectAsState()

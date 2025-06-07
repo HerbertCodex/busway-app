@@ -9,7 +9,6 @@ import ci.justapp.busway.domain.models.TransportCompanyModel
 import ci.justapp.busway.domain.repositories.TransportCompanyRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.time.Instant
 import javax.inject.Inject
 
 /**
@@ -31,6 +30,20 @@ class TransportCompanyRepositoryImpl @Inject constructor(private val transportCo
 
     override suspend fun getCompanyBySlug(slug: String): TransportCompanyModel? {
         return transportCompanyDao.findBySlug(slug)?.toModel()
+    }
+
+    @WorkerThread
+    override suspend fun fetchAndStoreTransportCompaniesFromApi() {
+        try {
+            Log.d("TC_API", "Appel API des compagnies de transport...")
+            val response = apiService.getTransportCompanies()
+
+            Log.d("TC_API", "Insertion en base de ${response.data.size} compagnies...")
+            insertMany(response.data)
+            Log.d("TC_API", "Synchronisation des compagnies réussie.")
+        } catch (e: Exception) {
+            Log.e("TC_API", "Erreur lors de la synchronisation : ${e.message}", e)
+        }
     }
 
     @WorkerThread
@@ -60,8 +73,8 @@ class TransportCompanyRepositoryImpl @Inject constructor(private val transportCo
             slug = slug,
             code = code,
             countryId = countryId,
-            createdAt = createdAt,
-            updatedAt = updatedAt
+            createdAt = createdAt.toString(),
+            updatedAt = updatedAt.toString()
         )
     }
 
@@ -72,34 +85,8 @@ class TransportCompanyRepositoryImpl @Inject constructor(private val transportCo
             slug = slug,
             code = code,
             countryId = countryId,
-            createdAt = createdAt,
-            updatedAt = updatedAt
+            createdAt = getCreatedAtAsLong(),
+            updatedAt = getUpdatedAtAsLong()
         )
-    }
-
-    @WorkerThread
-    override suspend fun fetchAndStoreTransportCompaniesFromApi() {
-        try {
-            Log.d("TC_API", "Appel API des compagnies de transport...")
-            val response = apiService.getTransportCompanies()
-
-            val companies = response.data.map { dto ->
-                TransportCompanyModel(
-                    id = dto.id,
-                    name = dto.name,
-                    slug = dto.slug,
-                    code = dto.code,
-                    countryId = dto.country_id,
-                    createdAt = Instant.parse(dto.created_at).toEpochMilli(),
-                    updatedAt = Instant.parse(dto.updated_at).toEpochMilli()
-                )
-            }
-
-            Log.d("TC_API", "Insertion en base de ${companies.size} compagnies...")
-            insertMany(companies)
-            Log.d("TC_API", "Synchronisation des compagnies réussie.")
-        } catch (e: Exception) {
-            Log.e("TC_API", "Erreur lors de la synchronisation : ${e.message}", e)
-        }
     }
 }

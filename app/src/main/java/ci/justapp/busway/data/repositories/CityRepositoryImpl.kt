@@ -56,8 +56,8 @@ class CityRepositoryImpl @Inject constructor(private val cityDao: CityDao, priva
             name = name,
             slug = slug,
             countryId = countryId,
-            createdAt = createdAt,
-            updatedAt = updatedAt
+            createdAt = createdAt.toString(),
+            updatedAt = updatedAt.toString()
         )
     }
 
@@ -67,8 +67,8 @@ class CityRepositoryImpl @Inject constructor(private val cityDao: CityDao, priva
             name = name,
             slug = slug,
             countryId = countryId,
-            createdAt = createdAt,
-            updatedAt = updatedAt
+            createdAt = getCreatedAtAsLong(),
+            updatedAt = getUpdatedAtAsLong()
         )
     }
 
@@ -80,20 +80,11 @@ class CityRepositoryImpl @Inject constructor(private val cityDao: CityDao, priva
             val response = cityApi.getCities()
 
             Log.d("CITY_API", "Réponse reçue. Total: ${response.total}, Nombre d'éléments: ${response.data.size}")
-            val cities = response.data.map {
-                dto -> CityModel(
-                    id =  dto.id,
-                    name = dto.name,
-                    slug = dto.slug,
-                    countryId = dto.country_id,
-                    createdAt =  Instant.parse(dto.created_at).toEpochMilli(),
-                    updatedAt = Instant.parse(dto.updated_at).toEpochMilli()
-                )
-            }
+            val cities = response.data
 
-        Log.d("CITY_REPO", "Insertion en base de ${cities.size} villes...")
-        insertMany(cities)
-        Log.d("CITY_REPO", "Insertion terminée avec succès.")
+            Log.d("CITY_REPO", "Insertion en base de ${response.data.size} villes...")
+            insertMany(response.data)
+            Log.d("CITY_REPO", "Insertion terminée avec succès.")
     } catch (e: Exception) {
         Log.e("CITY_API", "Erreur lors de la synchronisation : ${e.message}", e)
     }

@@ -1,4 +1,4 @@
-package ci.justapp.busway.data.remote.dto
+package ci.justapp.busway.data.remote.response
 
 data class PaginatedResponse<T>(
     val hasNext: Boolean,

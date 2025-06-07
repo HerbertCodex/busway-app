@@ -23,6 +23,9 @@ interface TransportModeDao {
     @Query("SELECT * FROM transport_modes WHERE slug = :slug")
     suspend fun findBySlug(slug: String): TransportModeEntity?
 
+    @Query("SELECT * FROM transport_modes WHERE name = :name")
+    suspend fun findByName(name: String): TransportModeEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(mode: TransportModeEntity)
 

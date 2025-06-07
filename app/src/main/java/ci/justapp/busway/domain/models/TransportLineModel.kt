@@ -1,5 +1,9 @@
 package ci.justapp.busway.domain.models
 
+import ci.justapp.busway.domain.models.mapper.GeometryDeserializer
+import com.google.gson.annotations.JsonAdapter
+import java.time.Instant
+
 /**
  * Represents a transport line with its associated details.
  *
@@ -27,17 +31,38 @@ data class TransportLineModel(
     val id: String,
     val slug: String,
     val line: String,
-    val lineNumber: String,
+    val lineNumber: String?,
     val openingHours: String,
     val companyId: String,
-    val typeTransportId: String,
+    val transportTypeId: String,
     val cityId: String,
     val startCommuneId: String,
     val endCommuneId: String,
+    @JsonAdapter(GeometryDeserializer::class)
     val geometry: String,
     val dataVersion: Int,
-    val syncedAt: Long,
+    val syncedAt: String,
     val metadataId: String,
-    val createdAt: Long,
-    val updatedAt: Long
-)
+    val createdAt: String,
+    val updatedAt: String
+){
+    /**
+     * Converts the ISO 8601 syncedAt string to milliseconds timestamp.
+     */
+    fun getSyncedAtAtAsLong(): Long {
+        return Instant.parse(syncedAt).toEpochMilli()
+    }
+    /**
+     * Converts the ISO 8601 createdAt string to milliseconds timestamp.
+     */
+    fun getCreatedAtAsLong(): Long {
+        return Instant.parse(createdAt).toEpochMilli()
+    }
+
+    /**
+     * Converts the ISO 8601 updatedAt string to milliseconds timestamp.
+     */
+    fun getUpdatedAtAsLong(): Long {
+        return Instant.parse(updatedAt).toEpochMilli()
+    }
+}

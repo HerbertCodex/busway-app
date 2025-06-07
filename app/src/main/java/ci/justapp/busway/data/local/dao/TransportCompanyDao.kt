@@ -24,6 +24,9 @@ interface TransportCompanyDao {
     @Query("SELECT * FROM transport_companies WHERE slug = :slug")
     suspend fun findBySlug(slug: String): TransportCompanyEntity?
 
+    @Query("SELECT * FROM transport_companies WHERE name = :name")
+    suspend fun findByName(name: String): TransportCompanyEntity?
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(company: TransportCompanyEntity)

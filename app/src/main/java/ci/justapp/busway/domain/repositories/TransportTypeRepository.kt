@@ -15,4 +15,5 @@ interface TransportTypeRepository {
     suspend fun insertMany(types: List<TransportTypeModel>)
     suspend fun update(type: TransportTypeModel)
     suspend fun delete(type: TransportTypeModel)
+    suspend fun fetchAndStoreTransportTypesFromApi()
 }
