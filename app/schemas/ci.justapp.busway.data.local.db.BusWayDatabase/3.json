@@ -1,12 +1,12 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 2,
-    "identityHash": "efeaf03868946aee8ae2e67e971ee1dc",
+    "version": 3,
+    "identityHash": "c43647419033f8968fe78077278db797",
     "entities": [
       {
         "tableName": "cities",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `slug` TEXT NOT NULL, `country_id` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`country_id`) REFERENCES `countries`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `slug` TEXT NOT NULL, `country_id` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`country_id`) REFERENCES `countries`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -65,7 +65,7 @@
         "foreignKeys": [
           {
             "table": "countries",
-            "onDelete": "RESTRICT",
+            "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
               "country_id"
@@ -78,7 +78,7 @@
       },
       {
         "tableName": "communes",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `slug` TEXT NOT NULL, `code` TEXT NOT NULL, `city_id` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`city_id`) REFERENCES `cities`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `slug` TEXT NOT NULL, `code` TEXT NOT NULL, `city_id` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`city_id`) REFERENCES `cities`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -144,7 +144,7 @@
         "foreignKeys": [
           {
             "table": "cities",
-            "onDelete": "RESTRICT",
+            "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
               "city_id"
@@ -246,7 +246,7 @@
       },
       {
         "tableName": "transport_companies",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `slug` TEXT NOT NULL, `code` TEXT NOT NULL, `country_id` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`country_id`) REFERENCES `countries`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `slug` TEXT NOT NULL, `code` TEXT NOT NULL, `country_id` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`country_id`) REFERENCES `countries`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -312,7 +312,7 @@
         "foreignKeys": [
           {
             "table": "countries",
-            "onDelete": "RESTRICT",
+            "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
               "country_id"
@@ -325,7 +325,7 @@
       },
       {
         "tableName": "transport_lines",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `slug` TEXT NOT NULL, `line` TEXT NOT NULL, `line_number` TEXT NOT NULL, `opening_hours` TEXT NOT NULL, `company_id` TEXT NOT NULL, `type_transport_id` TEXT NOT NULL, `city_id` TEXT NOT NULL, `start_commune_id` TEXT NOT NULL, `end_commune_id` TEXT NOT NULL, `geometry` TEXT NOT NULL, `data_version` INTEGER NOT NULL, `synced_at` INTEGER NOT NULL, `metadata_id` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`company_id`) REFERENCES `transport_companies`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT , FOREIGN KEY(`type_transport_id`) REFERENCES `transport_types`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT , FOREIGN KEY(`city_id`) REFERENCES `cities`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT , FOREIGN KEY(`start_commune_id`) REFERENCES `communes`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT , FOREIGN KEY(`end_commune_id`) REFERENCES `communes`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT , FOREIGN KEY(`metadata_id`) REFERENCES `data_metadata`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `slug` TEXT NOT NULL, `line` TEXT NOT NULL, `line_number` TEXT NOT NULL, `opening_hours` TEXT NOT NULL, `company_id` TEXT NOT NULL, `type_transport_id` TEXT NOT NULL, `city_id` TEXT NOT NULL, `start_commune_id` TEXT NOT NULL, `end_commune_id` TEXT NOT NULL, `geometry` TEXT NOT NULL, `data_version` INTEGER NOT NULL, `synced_at` INTEGER NOT NULL, `metadata_id` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`company_id`) REFERENCES `transport_companies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`type_transport_id`) REFERENCES `transport_types`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`city_id`) REFERENCES `cities`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`start_commune_id`) REFERENCES `communes`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`end_commune_id`) REFERENCES `communes`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`metadata_id`) REFERENCES `data_metadata`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -489,7 +489,7 @@
         "foreignKeys": [
           {
             "table": "transport_companies",
-            "onDelete": "RESTRICT",
+            "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
               "company_id"
@@ -500,7 +500,7 @@
           },
           {
             "table": "transport_types",
-            "onDelete": "RESTRICT",
+            "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
               "type_transport_id"
@@ -511,7 +511,7 @@
           },
           {
             "table": "cities",
-            "onDelete": "RESTRICT",
+            "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
               "city_id"
@@ -522,7 +522,7 @@
           },
           {
             "table": "communes",
-            "onDelete": "RESTRICT",
+            "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
               "start_commune_id"
@@ -533,7 +533,7 @@
           },
           {
             "table": "communes",
-            "onDelete": "RESTRICT",
+            "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
               "end_commune_id"
@@ -544,7 +544,7 @@
           },
           {
             "table": "data_metadata",
-            "onDelete": "RESTRICT",
+            "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
               "metadata_id"
@@ -610,7 +610,7 @@
       },
       {
         "tableName": "transport_types",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `slug` TEXT NOT NULL, `code` TEXT NOT NULL, `company_id` TEXT NOT NULL, `mode_id` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`mode_id`) REFERENCES `transport_modes`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT , FOREIGN KEY(`company_id`) REFERENCES `transport_companies`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `slug` TEXT NOT NULL, `code` TEXT NOT NULL, `company_id` TEXT NOT NULL, `mode_id` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`mode_id`) REFERENCES `transport_modes`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`company_id`) REFERENCES `transport_companies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -683,7 +683,7 @@
         "foreignKeys": [
           {
             "table": "transport_modes",
-            "onDelete": "RESTRICT",
+            "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
               "mode_id"
@@ -694,7 +694,7 @@
           },
           {
             "table": "transport_companies",
-            "onDelete": "RESTRICT",
+            "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
               "company_id"
@@ -708,7 +708,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'efeaf03868946aee8ae2e67e971ee1dc')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c43647419033f8968fe78077278db797')"
     ]
   }
 }

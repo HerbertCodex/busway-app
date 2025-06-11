@@ -31,6 +31,7 @@ import ci.justapp.busway.presentation.components.SearchBar
 import ci.justapp.busway.presentation.viewmodels.CityViewModel
 import ci.justapp.busway.presentation.viewmodels.CommuneViewModel
 import ci.justapp.busway.presentation.viewmodels.CountryViewModel
+import ci.justapp.busway.presentation.viewmodels.DataMetadataViewModel
 import ci.justapp.busway.presentation.viewmodels.TransportCompanyViewModel
 import ci.justapp.busway.presentation.viewmodels.TransportLineViewModel
 import ci.justapp.busway.presentation.viewmodels.TransportModeViewModel
@@ -46,17 +47,20 @@ fun MainScreen(
     transportCompanyViewModel: TransportCompanyViewModel = hiltViewModel(),
     transportModeViewModel: TransportModeViewModel = hiltViewModel(),
     transportTypeViewModel: TransportTypeViewModel = hiltViewModel(),
+    dataMetadataViewModel: DataMetadataViewModel = hiltViewModel(),
     transportLineViewModel: TransportLineViewModel = hiltViewModel()
 ) {
     // Forcer l'initialisation des données au premier affichage
     LaunchedEffect(Unit) {
 //        viewModel.fetchCurrentLocation()
-        countryViewModel.syncCountriesFromApi()
+//        viewModel.deleteAllData()
+//        countryViewModel.syncCountriesFromApi()
 //        cityViewModel.syncCitiesFromApi()
 //        communeViewModel.syncCommunesFromApi()
 //        transportCompanyViewModel.syncCompaniesFromApi()
 //        transportModeViewModel.syncTransportModesFromApi()
 //        transportTypeViewModel.syncTransportTypesFromApi()
+//        dataMetadataViewModel.syncMetadataFromApi()
 //        transportLineViewModel.syncTransportLinesFromApi()
     }
 

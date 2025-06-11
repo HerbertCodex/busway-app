@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import ci.justapp.busway.data.local.entities.CityEntity
 import ci.justapp.busway.data.local.entities.DataMetadataEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -35,4 +36,7 @@ interface DataMetadataDao {
 
     @Delete
     suspend fun delete(metadata: DataMetadataEntity)
+
+    @Query("DELETE FROM data_metadata")
+    suspend fun deleteAll()
 }

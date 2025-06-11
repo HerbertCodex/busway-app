@@ -4,6 +4,7 @@ import ci.justapp.busway.data.repositories.CityRepositoryImpl
 import ci.justapp.busway.data.repositories.CommuneRepositoryImpl
 import ci.justapp.busway.data.repositories.CountryRepositoryImpl
 import ci.justapp.busway.data.repositories.DataMetadataRepositoryImpl
+import ci.justapp.busway.data.repositories.DataRepositoryImpl
 import ci.justapp.busway.data.repositories.TransportCompanyRepositoryImpl
 import ci.justapp.busway.data.repositories.TransportLineRepositoryImpl
 import ci.justapp.busway.data.repositories.TransportModeRepositoryImpl
@@ -12,6 +13,7 @@ import ci.justapp.busway.domain.repositories.CityRepository
 import ci.justapp.busway.domain.repositories.CommuneRepository
 import ci.justapp.busway.domain.repositories.CountryRepository
 import ci.justapp.busway.domain.repositories.DataMetadataRepository
+import ci.justapp.busway.domain.repositories.DataRepository
 import ci.justapp.busway.domain.repositories.TransportCompanyRepository
 import ci.justapp.busway.domain.repositories.TransportLineRepository
 import ci.justapp.busway.domain.repositories.TransportModeRepository
@@ -87,4 +89,8 @@ abstract class BusWayModule {
     @Binds
     @Singleton
     abstract fun bindTransportTypeRepository(impl: TransportTypeRepositoryImpl): TransportTypeRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindDataRepository(impl: DataRepositoryImpl): DataRepository
 }

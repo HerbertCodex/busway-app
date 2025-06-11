@@ -18,7 +18,7 @@ data class TransportModeModel(
     val id: String,
     val name: String,
     val slug: String,
-    val createdAt: String, // Changé de Long à String
+    val createdAt: String,
     val updatedAt: String
 ){
     /**

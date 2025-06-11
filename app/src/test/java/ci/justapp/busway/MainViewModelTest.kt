@@ -17,7 +17,6 @@ class MainViewModelTest {
     fun setup() {
         // Configurer le dispatcher principal pour les tests
         Dispatchers.setMain(Dispatchers.Unconfined)
-        viewModel = MainViewModel()
     }
 
     @After

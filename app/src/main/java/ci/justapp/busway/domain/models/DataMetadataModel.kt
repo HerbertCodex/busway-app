@@ -1,5 +1,7 @@
 package ci.justapp.busway.domain.models
 
+import java.time.Instant
+
 /**
  * Represents metadata associated with a data entity.
  *
@@ -16,5 +18,13 @@ package ci.justapp.busway.domain.models
 data class DataMetadataModel(
     val id: String,
     val lastVersion: Int,
-    val lastUpdatedAt: Long
-)
+    val lastUpdatedAt: String
+){
+    /**
+     * Converts the ISO 8601 lastUpdatedAt string to milliseconds timestamp.
+     */
+    fun getLastUpdatedAtAsLong(): Long {
+        return Instant.parse(lastUpdatedAt).toEpochMilli()
+    }
+
+}

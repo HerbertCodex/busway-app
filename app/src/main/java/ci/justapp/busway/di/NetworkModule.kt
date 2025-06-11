@@ -3,6 +3,7 @@ package ci.justapp.busway.di
 import ci.justapp.busway.data.remote.services.CityApiService
 import ci.justapp.busway.data.remote.services.CommunesApiService
 import ci.justapp.busway.data.remote.services.CountriesApiService
+import ci.justapp.busway.data.remote.services.DataMetadataApiService
 import ci.justapp.busway.data.remote.services.TransportCompanyApiService
 import ci.justapp.busway.data.remote.services.TransportLineApiService
 import ci.justapp.busway.data.remote.services.TransportModeApiService
@@ -20,7 +21,7 @@ object NetworkModule {
 
     @Provides
     fun provideRetrofit(): Retrofit = Retrofit.Builder()
-        .baseUrl("http://192.168.254.250:4000/")
+        .baseUrl("http://192.168.167.250:4000/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
@@ -51,5 +52,9 @@ object NetworkModule {
     @Provides
     fun provideTransportModeApiService(retrofit: Retrofit): TransportModeApiService =
         retrofit.create(TransportModeApiService::class.java)
+
+    @Provides
+    fun provideDataMetadataApiService(retrofit: Retrofit): DataMetadataApiService =
+        retrofit.create(DataMetadataApiService::class.java)
 
 }

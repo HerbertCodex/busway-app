@@ -22,7 +22,7 @@ data class CountryModel(
     val name: String,
     val slug: String,
     val codeIso: String,
-    val createdAt: String, // Changé de Long à String
+    val createdAt: String,
     val updatedAt: String
 ){
     /**

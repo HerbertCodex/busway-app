@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import ci.justapp.busway.data.local.entities.CityEntity
 import ci.justapp.busway.data.local.entities.TransportModeEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -37,4 +38,7 @@ interface TransportModeDao {
 
     @Delete
     suspend fun delete(mode: TransportModeEntity)
+
+    @Query("DELETE FROM transport_modes")
+    suspend fun deleteAll()
 }

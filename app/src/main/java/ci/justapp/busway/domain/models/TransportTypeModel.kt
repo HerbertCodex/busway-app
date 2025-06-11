@@ -25,7 +25,7 @@ data class TransportTypeModel(
     val code: String,
     val companyId: String,
     val modeId: String,
-    val createdAt: String, // Changé de Long à String
+    val createdAt: String,
     val updatedAt: String
 ){
     /**

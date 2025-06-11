@@ -1,8 +1,10 @@
 package ci.justapp.busway.data.repositories
 
+import android.util.Log
 import androidx.annotation.WorkerThread
 import ci.justapp.busway.data.local.dao.DataMetadataDao
 import ci.justapp.busway.data.local.entities.DataMetadataEntity
+import ci.justapp.busway.data.remote.services.DataMetadataApiService
 import ci.justapp.busway.domain.models.DataMetadataModel
 import ci.justapp.busway.domain.repositories.DataMetadataRepository
 import kotlinx.coroutines.flow.Flow
@@ -18,7 +20,7 @@ import javax.inject.Inject
  *
  * @property metadataDao The Data Access Object for [DataMetadataEntity]. Used to interact with the database.
  */
-class DataMetadataRepositoryImpl @Inject constructor(private val metadataDao: DataMetadataDao) :
+class DataMetadataRepositoryImpl @Inject constructor(private val metadataDao: DataMetadataDao, private val apiService: DataMetadataApiService) :
     DataMetadataRepository {
 
     override fun getMetadata(): Flow<List<DataMetadataModel>> {
@@ -40,6 +42,20 @@ class DataMetadataRepositoryImpl @Inject constructor(private val metadataDao: Da
     }
 
     @WorkerThread
+    override suspend fun fetchAndStoreDataMetadataFromApi() {
+        try {
+            Log.d("TC_API", "Appel API des metadata de transport...")
+            val response = apiService.getDataMetadata()
+
+            Log.d("TC_API", "Insertion en base de ${response.data.size} metadata...")
+            insertMany(response.data)
+            Log.d("TC_API", "Synchronisation des metadata réussie.")
+        } catch (e: Exception) {
+            Log.e("TC_API", "Erreur lors de la synchronisation : ${e.message}", e)
+        }
+    }
+
+    @WorkerThread
     override suspend fun update(metadata: DataMetadataModel) {
         return metadataDao.update(metadata.toEntity())
     }
@@ -53,7 +69,7 @@ class DataMetadataRepositoryImpl @Inject constructor(private val metadataDao: Da
         return DataMetadataModel(
             id = id,
             lastVersion = lastVersion,
-            lastUpdatedAt = lastUpdatedAt,
+            lastUpdatedAt = lastUpdatedAt.toString(),
         )
     }
 
@@ -61,7 +77,7 @@ class DataMetadataRepositoryImpl @Inject constructor(private val metadataDao: Da
         return DataMetadataEntity(
             id = id,
             lastVersion = lastVersion,
-            lastUpdatedAt = lastUpdatedAt,
+            lastUpdatedAt = getLastUpdatedAtAsLong(),
         )
     }
 }

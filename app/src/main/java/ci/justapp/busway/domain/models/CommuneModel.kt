@@ -22,7 +22,7 @@ data class CommuneModel(
     val slug: String,
     val code: String,
     val cityId: String,
-    val createdAt: String, // Changé de Long à String
+    val createdAt: String,
     val updatedAt: String
 ){
     /**

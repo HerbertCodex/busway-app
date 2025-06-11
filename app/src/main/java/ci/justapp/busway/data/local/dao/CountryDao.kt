@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import ci.justapp.busway.data.local.entities.CityEntity
 import ci.justapp.busway.data.local.entities.CountryEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -34,4 +35,7 @@ interface CountryDao {
 
     @Delete
     suspend fun delete(country: CountryEntity)
+
+    @Query("DELETE FROM countries")
+    suspend fun deleteAll()
 }

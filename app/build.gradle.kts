@@ -91,11 +91,11 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 
     // AndroidX Test - Core (pour Robolectric)
-    testImplementation ("androidx.test:core:1.5.0")
+    testImplementation ("androidx.test:core:1.6.1")
 
     // Bibliothèque de test pour Compose
-    testImplementation("androidx.compose.ui:ui-test-junit4:1.5.4")
-    testImplementation("androidx.compose.ui:ui-test-manifest:1.5.4")
+    testImplementation("androidx.compose.ui:ui-test-junit4:1.8.2")
+    testImplementation("androidx.compose.ui:ui-test-manifest:1.8.2")
 
     // Mockito pour Kotlin
     testImplementation("org.mockito:mockito-core:5.3.1")

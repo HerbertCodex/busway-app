@@ -15,4 +15,5 @@ interface DataMetadataRepository {
     suspend fun insertMany(list: List<DataMetadataModel>)
     suspend fun update(metadata: DataMetadataModel)
     suspend fun delete(metadata: DataMetadataModel)
+    suspend fun fetchAndStoreDataMetadataFromApi()
 }

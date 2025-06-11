@@ -23,7 +23,7 @@ data class TransportCompanyModel(
     val slug: String,
     val code: String,
     val countryId: String,
-    val createdAt: String, // Changé de Long à String
+    val createdAt: String,
     val updatedAt: String
 ){
     /**
